@@ -11,6 +11,6 @@ public class GestureTemplate : ScriptableObject
         public Vector2[] points;
     }
 
-    public string templateName;
+    public SkillName templateName;
     public List<GestureSample> samples = new();
 }

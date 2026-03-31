@@ -13,11 +13,11 @@ public class UnistrokePanel : MaskableGraphic, IPointerDownHandler, IPointerUpHa
     [Serializable]
     public class RecognizeResult
     {
-        public string gestureName;
+        public SkillName gestureName;
         public float score;
         public float distance;
 
-        public RecognizeResult(string gestureName, float score, float distance)
+        public RecognizeResult(SkillName gestureName, float score, float distance)
         {
             this.gestureName = gestureName;
             this.score = score;
@@ -30,7 +30,7 @@ public class UnistrokePanel : MaskableGraphic, IPointerDownHandler, IPointerUpHa
     private List<GestureTemplate> templates = new();
 
     [SerializeField]
-    private string currentTemplateName;
+    private SkillName currentTemplateName;
 
     [Header("Draw")]
     [SerializeField]
@@ -179,6 +179,7 @@ public class UnistrokePanel : MaskableGraphic, IPointerDownHandler, IPointerUpHa
             {
                 ClearPath();
             }
+
             return;
         }
 
@@ -199,9 +200,7 @@ public class UnistrokePanel : MaskableGraphic, IPointerDownHandler, IPointerUpHa
         }
 
         if (result.score >= threshold)
-        {
             EventBus.Instance.Publish(EventNames.OnOpenMagicCircle, result.gestureName);
-        }
 
         Debug.Log($"Recognition result: {result.gestureName}, score={result.score:F4}, distance={result.distance:F4}");
         ClearPath();
@@ -270,7 +269,7 @@ public class UnistrokePanel : MaskableGraphic, IPointerDownHandler, IPointerUpHa
 
         List<Vector2> candidate = Normalize(_pathPoints);
         float bestDistance = float.MaxValue;
-        string bestName = "Unknown";
+        SkillName bestName = SkillName.Crystal;
 
         for (int i = 0; i < templates.Count; i++)
         {
@@ -293,7 +292,7 @@ public class UnistrokePanel : MaskableGraphic, IPointerDownHandler, IPointerUpHa
                 if (distance < bestDistance)
                 {
                     bestDistance = distance;
-                    bestName = string.IsNullOrWhiteSpace(template.templateName) ? template.name : template.templateName;
+                    bestName = template.templateName;
                 }
             }
         }
@@ -594,7 +593,7 @@ public class UnistrokePanel : MaskableGraphic, IPointerDownHandler, IPointerUpHa
         Debug.Log("Save template mode disabled.");
     }
 
-    public static void SaveCurrentAsTemplate(string templateName)
+    public static void SaveCurrentAsTemplate(SkillName templateName)
     {
         if (_activeInstance == null)
         {
@@ -605,14 +604,8 @@ public class UnistrokePanel : MaskableGraphic, IPointerDownHandler, IPointerUpHa
         _activeInstance.SaveCurrentTemplateInternal(templateName);
     }
 
-    private void SaveCurrentTemplateInternal(string templateName)
+    private void SaveCurrentTemplateInternal(SkillName templateName)
     {
-        if (string.IsNullOrWhiteSpace(templateName))
-        {
-            Debug.LogWarning("Template name cannot be empty.");
-            return;
-        }
-
         if (_pathPoints.Count < 2)
         {
             Debug.LogWarning("The current path contains too few points to save as a template.");
@@ -658,18 +651,18 @@ public class UnistrokePanel : MaskableGraphic, IPointerDownHandler, IPointerUpHa
     }
 
     [MenuItem("Game/Save Magic Template/Crystal")]
-    private static void SaveCrystal() => SaveCurrentAsTemplate("Crystal");
+    private static void SaveCrystal() => SaveCurrentAsTemplate(SkillName.Crystal);
 
     [MenuItem("Game/Save Magic Template/Circle")]
-    private static void SaveCircle() => SaveCurrentAsTemplate("Circle");
-    
+    private static void SaveCircle() => SaveCurrentAsTemplate(SkillName.Circle);
+
     [MenuItem("Game/Save Magic Template/Flame")]
-    private static void SaveFlame() => SaveCurrentAsTemplate("Flame");
-    
+    private static void SaveFlame() => SaveCurrentAsTemplate(SkillName.Flame);
+
     [MenuItem("Game/Save Magic Template/Thunder")]
-    private static void SaveThunder() => SaveCurrentAsTemplate("Thunder");
-    
+    private static void SaveThunder() => SaveCurrentAsTemplate(SkillName.Thunder);
+
     [MenuItem("Game/Save Magic Template/Rune")]
-    private static void SaveRune() => SaveCurrentAsTemplate("Rune"); // 符文
+    private static void SaveRune() => SaveCurrentAsTemplate(SkillName.Rune); // 符文
 #endif
 }

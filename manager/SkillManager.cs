@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SkillManager
 {
-    private static Dictionary<string, SkillConfig> _skillConfigDic = new();
+    private static Dictionary<SkillName, SkillConfig> _skillConfigDic = new();
 
     private static SkillManager _instance;
     public static SkillManager Instance
@@ -29,7 +29,7 @@ public class SkillManager
         }
     }
 
-    public SkillConfig GetSkillByName(string name)
+    public SkillConfig GetSkillByName(SkillName name)
     {
         return _skillConfigDic.GetValueOrDefault(name);
     }
