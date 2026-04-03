@@ -7,19 +7,14 @@ public class EventBus
 {
     public UnityAction OpenDetail;
 
-    private Dictionary<string, UnityAction<object>> _eventDict =
-        new Dictionary<string, UnityAction<object>>();
+    private readonly Dictionary<string, UnityAction<object>> _eventDict = new();
 
     private static EventBus _instance;
     public static EventBus Instance
     {
         get
         {
-            if (_instance == null)
-            {
-                _instance = new EventBus();
-            }
-
+            _instance ??= new EventBus();
             return _instance;
         }
     }
@@ -100,7 +95,7 @@ public static class EventNames
 
     // 释放技能，有参数，是识别出来的技能名
     public const string OnMagic = "OnMagic";
-    
+
     // 小地图
     public const string OnMiniMapInit = "OnMiniMapInit";
     public const string OnMiniMapChanged = "OnMiniMapChanged";

@@ -36,9 +36,13 @@ public class PackageCeil : MonoBehaviour
         var btnOpenDetail = GetComponent<Button>();
         btnOpenDetail.onClick.AddListener(() =>
         {
+            if (itemData == null)
+                return;
+
             EventBus.Instance.Publish(EventNames.OpenDetail, itemData);
             EventBus.Instance.Publish(EventNames.CloseSelect);
-            UISelect.gameObject.SetActive(true);
+            if (UISelect != null)
+                UISelect.gameObject.SetActive(true);
         });
     }
 
@@ -50,12 +54,17 @@ public class PackageCeil : MonoBehaviour
         UIIcon = transform.Find("Icon");
         UICount = transform.Find("Count");
 
-        UISelect.gameObject.SetActive(false);
+        if (UISelect != null)
+            UISelect.gameObject.SetActive(false);
     }
 
     public void InitData(ItemData itemData)
     {
+        if (itemData == null || UIIcon == null || UIRarity == null || UICount == null)
+            return;
+
         var icon = UIIcon.GetComponent<Image>();
+        var countText = UICount.GetComponent<TextMeshProUGUI>();
 
         ItemConfig config = null;
 
@@ -68,17 +77,31 @@ public class PackageCeil : MonoBehaviour
             config = equipmentData.equipmentConfig;
         }
 
+        if (config == null)
+            return;
+
         icon.sprite = config.icon;
         icon.transform.localScale = new Vector3(0.85268f, 0.85268f, 0.85268f);
 
         var rarity = UIRarity.GetComponent<Image>();
         rarity.sprite = config.rarity;
 
+        if (UISelect != null)
+            UISelect.gameObject.SetActive(false);
+
+        if (UIDeleteSelect != null)
+            UIDeleteSelect.gameObject.SetActive(false);
+
         // 装备不显示堆叠数量
         if (itemData is not EquipmentData)
-            UICount.GetComponent<TextMeshProUGUI>().text = itemData.count.ToString();
+        {
+            countText.gameObject.SetActive(true);
+            countText.text = itemData.count.ToString();
+        }
         else
-            UICount.GetComponent<TextMeshProUGUI>().gameObject.SetActive(false);
+        {
+            countText.gameObject.SetActive(false);
+        }
 
 
         this.itemData = itemData;

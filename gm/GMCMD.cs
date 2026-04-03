@@ -12,9 +12,14 @@ public class GMCMD
         var epic = Resources.Load<ItemConfig>("Data/EpicCutlass");
         var hpPotion = Resources.Load<ItemConfig>("Data/HpPotion");
 
-        PackageManager.Instance.Obtain(common);
-        PackageManager.Instance.Obtain(epic);
-        PackageManager.Instance.Obtain(hpPotion);
+
+        for (int i = 0; i < 300; i++)
+        {
+            PackageManager.Instance.Obtain(common);
+            PackageManager.Instance.Obtain(epic);
+            PackageManager.Instance.Obtain(hpPotion);
+        }
+
 
         PackageManager.Instance.Save();
     }
