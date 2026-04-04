@@ -10,32 +10,22 @@ public class StateMachine<T> where T : Entity
 {
     public IState<T> CurrentState { get; private set; }
 
-    private T owner;
+    private readonly T _owner;
 
-    public StateMachine(T owner)
-    {
-        this.owner = owner;
-    }
+    public StateMachine(T owner) => _owner = owner;
 
     public void ChangeTo(IState<T> newState)
     {
-        if (CurrentState == newState)
-            return;
+        if (CurrentState == newState) return;
 
-        CurrentState?.Exit(owner);
+        CurrentState?.Exit(_owner);
 
         CurrentState = newState;
 
-        CurrentState?.Enter(owner);
+        CurrentState?.Enter(_owner);
     }
 
-    public void Update()
-    {
-        CurrentState?.Update(owner);
-    }
+    public void Update() => CurrentState?.Update(_owner);
 
-    public void FixedUpdate()
-    {
-        CurrentState?.FixedUpdate(owner);
-    }
+    public void FixedUpdate() => CurrentState?.FixedUpdate(_owner);
 }
