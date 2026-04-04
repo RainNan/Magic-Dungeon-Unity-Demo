@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+
 public class UIManager
 {
     private Dictionary<string, string> _pathDict;
@@ -53,6 +54,7 @@ public class UIManager
             { UIConst.PackagePanel, "Package/PackagePanel" },
             { UIConst.EquipmentPanel, "Package/EquipmentPanel" },
             { UIConst.DetailPanel, "Package/DetailPanel" },
+            { UIConst.QuestPanel, "Package/QuestPanel" }
         };
     }
 
@@ -117,4 +119,5 @@ public class UIConst
     public static string PackagePanel = "PackagePanel";
     public static string EquipmentPanel = "EquipmentPanel";
     public static string DetailPanel = "DetailPanel";
+    public static string QuestPanel = "QuestPanel";
 }

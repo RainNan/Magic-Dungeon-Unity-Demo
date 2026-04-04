@@ -6,6 +6,7 @@ public class MainPanel : BasePanel
 {
     private Transform UIOpenPackageBtn;
     private Transform UIOpenEquipmentBtn;
+    private Transform UIOpenQuestBtn;
 
     private void Awake()
     {
@@ -17,17 +18,14 @@ public class MainPanel : BasePanel
     {
         UIOpenPackageBtn.GetComponent<Button>().onClick.AddListener(OnOpenPackage);
         UIOpenEquipmentBtn.GetComponent<Button>().onClick.AddListener(OnOpenEquipment);
+        UIOpenQuestBtn.GetComponent<Button>().onClick.AddListener(OnOpenQuest);
     }
 
-    private void OnOpenEquipment()
-    {
-        UIManager.Instance.OpenPanel(UIConst.EquipmentPanel);
-    }
+    private void OnOpenQuest() => UIManager.Instance.OpenPanel(UIConst.QuestPanel);
+    
+    private void OnOpenEquipment() => UIManager.Instance.OpenPanel(UIConst.EquipmentPanel);
 
-    private void OnOpenPackage()
-    {
-        UIManager.Instance.OpenPanel(UIConst.PackagePanel);
-    }
+    private void OnOpenPackage() => UIManager.Instance.OpenPanel(UIConst.PackagePanel);
 
     private void Init()
     {

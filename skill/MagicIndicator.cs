@@ -19,8 +19,7 @@ public class MagicIndicator : MonoBehaviour
 
     // 防止bug: 放完技能之后一直点左键一直重放
     private bool _canMagic = false;
-
-
+    
     // 缓存组件
     private MeshRenderer _meshRenderer;
     private Material _magicIndicatorArrow;
@@ -71,10 +70,9 @@ public class MagicIndicator : MonoBehaviour
                 Vector3 lookDir = transform.position - _playerTrans.position;
                 lookDir.y = 0f;
 
-                _arrowDir = lookDir;
-
                 if (lookDir.sqrMagnitude > 0.0001f)
                 {
+                    _arrowDir = lookDir.normalized;
                     float yaw = Mathf.Atan2(lookDir.x, lookDir.z) * Mathf.Rad2Deg;
                     transform.rotation = Quaternion.Euler(90f, yaw, 270f);
                 }
@@ -158,9 +156,22 @@ public class MagicIndicator : MonoBehaviour
                     case SkillName.Thunder:
                         var pos = _playerTrans.position;
                         pos.y += 3f;
-                        skillObj = Instantiate(skillCfg.prefab, pos, Quaternion.identity);
+
+                        Vector3 castDir = skillCenterPos.position - _playerTrans.position;
+                        castDir.y = 0f;
+
+                        if (castDir.sqrMagnitude <= 0.0001f)
+                            castDir = _arrowDir;
+                        else
+                            castDir.Normalize();
+
+                        Quaternion castRotation = castDir.sqrMagnitude > 0.0001f
+                            ? Quaternion.LookRotation(castDir, Vector3.up)
+                            : Quaternion.identity;
+
+                        skillObj = Instantiate(skillCfg.prefab, pos, castRotation);
                         var rb = skillObj.AddComponent<Rigidbody>();
-                        rb.velocity = _arrowDir * skillCfg.speed;
+                        rb.velocity = castDir * skillCfg.speed;
                         rb.useGravity = false;
                         break;
                 }
